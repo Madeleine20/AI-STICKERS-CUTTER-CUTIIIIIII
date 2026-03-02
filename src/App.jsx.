@@ -1,0 +1,69 @@
+import React, { useState, useRef } from 'react';
+
+const genAI = new GoogleGenerativeAI("VOTRE_CLE_API_ICI");
+
+const App = () => {
+  const [image, setImage] = useState(null);
+  const [stickers, setStickers] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const imageRef = useRef(null);
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files;
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (f) => setImage(f.target.result);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const detectStickers = async () => {
+    if (!image) return;
+    setLoading(true);
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const prompt = "Detect all individual stickers in this image and provide their bounding boxes [ymin, xmin, ymax, xmax].";
+      
+      const result = await model.generateContent([
+        prompt,
+        { inlineData: { data: image.split(','), mimeType: "image/png" } }
+      ]);
+      
+      // Logique simplifiée pour l'exemple : on traite la réponse ici
+      console.log("Stickers détectés !", result.response.text());
+      // (Ici viendrait la logique de découpage Canvas que nous avons vue)
+      
+    } catch (error) {
+      console.error("Erreur :", error);
+    }
+    setLoading(false);
+  };
+
+  return (
+    <div className="p-8 bg-gray-100 min-h-screen flex flex-col items-center">
+      <h1 className="text-3xl font-bold mb-6 text-blue-600">Sticker Perfect AI</h1>
+      
+      <input type="file" onChange={handleImageUpload} className="mb-4" />
+      
+      {image && (
+        <div className="relative">
+          <img ref={imageRef} src={image} alt="Upload" className="max-w-md rounded-lg shadow-lg" />
+          <button 
+            onClick={detectStickers}
+            className="mt-4 bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition"
+          >
+            {loading ? "Analyse en cours..." : "Détecter les Stickers"}
+          </button>
+        </div>
+      )}
+
+      <div className="mt-8 grid grid-cols-3 gap-4">
+        {stickers.map((s, i) => (
+          <img key={i} src={s} alt={`Sticker ${i}`} className="border p-1 bg-white" />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default App;
