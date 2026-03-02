@@ -1,2 +1,2 @@
 # AI-STICKERS-CUTTER-CUTIIIIIII
- Je voulais faire une application, ou bien un site, qui me permettrait de faire des stickers en toute facilité. Le modèle permettrait de reconnaître les formes, de les couper et aussi d'enlever le background.
+ Je voulais faire une application, ou bien un site, qui me permettrait de faire des stickers en toute facilité. Le modèle permettrait de reconnaître les formes, de les couper et aussi d'enlever le background. Cqr souvent les application qui permmete de le faire sont trop longue et il faute le faire sois même, cette application va permettre a un utilisistauer les stickers qui se créent seules et la backround qui est retiré autamatiquement 
